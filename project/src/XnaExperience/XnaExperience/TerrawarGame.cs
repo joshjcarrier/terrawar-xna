@@ -3,19 +3,37 @@ namespace Terrawar.Client.XnaExperience
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
+    using Terrawar.Client.XnaExperience.Screen;
+    using Terrawar.Client.XnaExperience.ScreenManager;
 
     /// <summary>
     /// This is the main type for your game
     /// </summary>
     public class TerrawarGame : Game
     {
-        private GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
+        private readonly TerrawarScreenManager screenManager;
 
         public TerrawarGame()
         {
-            graphics = new GraphicsDeviceManager(this);
+            // initialize graphics device manager
+            new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            this.screenManager = new TerrawarScreenManager(this);
+            this.Components.Add(this.screenManager);
+
+            this.screenManager.AddScreen(new GameplayScreen());
+        }
+
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        public static void Main(string[] args)
+        {
+            using (var game = new TerrawarGame())
+            {
+                game.Run();
+            }
         }
 
         /// <summary>
@@ -27,9 +45,11 @@ namespace Terrawar.Client.XnaExperience
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            IsMouseVisible = true;
 
             base.Initialize();
         }
+
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -37,10 +57,8 @@ namespace Terrawar.Client.XnaExperience
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            // TODO preload all game content here
+            this.Content.Load<Texture2D>("graphics/dirt/1");
         }
 
         /// <summary>
@@ -64,7 +82,6 @@ namespace Terrawar.Client.XnaExperience
                 this.Exit();
 
             // TODO: Add your update logic here
-
             base.Update(gameTime);
         }
 
@@ -74,10 +91,8 @@ namespace Terrawar.Client.XnaExperience
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
+            GraphicsDevice.Clear(Color.Black);
+            
             base.Draw(gameTime);
         }
     }
